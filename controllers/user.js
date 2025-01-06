@@ -5,22 +5,22 @@ import ErrorHandler from "../middleware/err.js";
 
 
 
-export const getRegister = async (req, res,next) => {
+export const getRegister = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
-    
+
         let user = await User.findOne({ email });
-    
+
         if (user) return next(new ErrorHandler("User Already Exist", 400));
-    
+
         const hashedPassword = await bcrypt.hash(password, 10);
-    
+
         user = await User.create({ name, email, password: hashedPassword });
-    
+
         setCookies(user, res, "Registered Successfully", 201);
-      } catch (error) {
+    } catch (error) {
         next(error);
-      };
+    }
 };
 
 export const getMyProfile = (req, res) => {
@@ -54,17 +54,15 @@ export const getLogin = async (req, res, next) => {
 };
 
 export const getLogout = (req, res) => {
-
     res
-    .status(200)
-    .cookie("token", "", {
-      expires: new Date(Date.now()),
-      sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
-      secure: process.env.NODE_ENV === "Development" ? false : true,
-    })
-    .json({
-      success: true,
-      user: req.user,
-    });
-
-}
+        .status(200)
+        .cookie("token", "", {
+            expires: new Date(Date.now()),
+            sameSite: process.env.NODE_ENV === "Development" ? "lax" : "none",
+            secure: process.env.NODE_ENV === "Development" ? false : true,
+        })
+        .json({
+            success: true,
+            user: req.user,
+        });
+};
