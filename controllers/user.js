@@ -5,7 +5,7 @@ import ErrorHandler from "../middleware/err.js";
 
 
 
-export const getRegister = async (req, res) => {
+export const getRegister = async (req, res,next) => {
     try {
         const { name, email, password } = req.body;
 
