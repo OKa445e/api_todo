@@ -5,7 +5,7 @@ import ErrorHandler from "../middleware/err.js";
 
 
 
-export const getRegister = async (req, res, next) => {
+export const getRegister = async (req, res,next) => {
     try {
         const { name, email, password } = req.body;
 
@@ -28,7 +28,7 @@ export const getMyProfile = (req, res) => {
     res.status(200).json({
         success: true,
         user: req.user,
-      });
+    });
 
 };
 
@@ -38,16 +38,14 @@ export const getLogin = async (req, res, next) => {
 
         const user = await User.findOne({ email }).select("+password");
 
-        if (!user)
-            return next(new ErrorHandler("Invalid email or Password", 400));
-
+        if (!user) return next(new ErrorHandler("Invalid Email or Password", 400));
 
         const isMatch = await bcrypt.compare(password, user.password);
 
-
         if (!isMatch)
-            return  next(new ErrorHandler("Invalid email or Password", 400));
-        setCookies(user, res, `Welcome back, ${user.name}`, 200)
+            return next(new ErrorHandler("Invalid Email or Password", 400));
+
+        setCookies(user, res, `Welcome back, ${user.name}`, 200);
     } catch (error) {
         next(error);
     }
